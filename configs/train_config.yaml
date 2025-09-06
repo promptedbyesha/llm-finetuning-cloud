@@ -1,0 +1,10 @@
+model_name: "llama-base"
+learning_rate: 5e-5
+batch_size: 16
+num_epochs: 3
+lora:
+  rank: 8
+  alpha: 16
+  dropout: 0.1
+dataset_path: "data/processed/train.json"
+output_dir: "models/llm-finetuned"
