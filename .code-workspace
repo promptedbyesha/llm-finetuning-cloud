@@ -1,0 +1,8 @@
+{
+    "folders": [
+        { "path": "C:/Users/hp/Desktop/llm-finetuning-cloud-orchestration" }
+    ],
+    "settings": {
+        "python.pythonPath": "env/bin/python"
+    }
+}
