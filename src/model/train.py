@@ -2,11 +2,13 @@ import torch
 from transformers import AutoModelForCausalLM, Trainer, TrainingArguments, AutoTokenizer
 from datasets import load_dataset
 import os
-import json
+import yaml
+
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 def load_config(config_path):
     with open(config_path, "r") as f:
-        return json.load(f)
+        return yaml.safe_load(f)
 
 def main():
     config = load_config("configs/train_config.yaml")
@@ -14,7 +16,7 @@ def main():
     model_name = config["model_name"]
     dataset_path = config["dataset_path"]
     output_dir = config["output_dir"]
-    learning_rate = config["learning_rate"]
+    learning_rate = float(config["learning_rate"])
     batch_size = config["batch_size"]
     num_epochs = config["num_epochs"]
 
@@ -23,14 +25,23 @@ def main():
 
     # Example dataset loading; replace with your data loading pipeline
     dataset = load_dataset("json", data_files={"train": dataset_path})
+
     def tokenize_function(examples):
-        return tokenizer(examples['text'], truncation=True, padding="max_length", max_length=512)
+        tokenized = tokenizer(
+            examples['text'],
+            truncation=True,
+            padding="max_length",
+            max_length=512
+        )
+        # Add labels for loss calculation
+        tokenized["labels"] = tokenized["input_ids"].copy()
+        return tokenized
+
     tokenized_dataset = dataset.map(tokenize_function, batched=True)
 
     training_args = TrainingArguments(
         output_dir=output_dir,
         overwrite_output_dir=True,
-        evaluation_strategy="epoch",
         learning_rate=learning_rate,
         per_device_train_batch_size=batch_size,
         num_train_epochs=num_epochs,
@@ -47,7 +58,11 @@ def main():
     )
 
     trainer.train()
-    trainer.save_model(output_dir)
+
+    # Save fine-tuned model and tokenizer to a dedicated models folder
+    save_path = "./models/my_finetuned_llm"
+    trainer.save_model(save_path)
+    tokenizer.save_pretrained(save_path)
 
 if __name__ == "__main__":
     main()
