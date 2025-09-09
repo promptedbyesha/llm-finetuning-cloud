@@ -1,3 +1,18 @@
+---
+license: apache-2.0
+language: en
+library_name: transformers
+pipeline_tag: text-generation
+tags:
+  - llm
+  - finetuned
+  - langchain
+  - cloud-deployment
+model-index:
+  - name: llm-finetuned-model
+    results: []
+---
+
 # Finetuning an Open-Source LLM
 
 This project adapts large language models to domain-specific tasks, leveraging parameter-efficient techniques (LoRA/QLoRA), cloud deployment, and workflow orchestration.
