@@ -64,6 +64,19 @@ def main():
     trainer.train()
     trainer.save_model(output_dir)         # Saves model files like pytorch_model.bin, config.json
     tokenizer.save_pretrained(output_dir)  # Saves tokenizer files like tokenizer_config.json, vocab files
+    print(f"Model and tokenizer saved in {output_dir}")
+    
+        # Debug: Check if folder exists after saving
+    import os
+    if os.path.exists(output_dir):
+        print(f"Output directory exists: {output_dir}")
+    else:
+        print(f"Output directory DOES NOT exist: {output_dir}")
+
+    # Debug: List files in output_dir
+    saved_files = os.listdir(output_dir) if os.path.exists(output_dir) else []
+    print(f"Files saved in output directory: {saved_files}")
+
 
 if __name__ == "__main__":
     main()
